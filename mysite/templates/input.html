@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN""http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+    <title>Welcome!</title>
+</head>
+<p align="right">{{ w }} {%if flag%}
+     <a href="{%url logout%}">注销</a>
+    {%else%}<a href="{%url login%}">登陆</a>  |
+    <a href="{%url register%}">注册</a>
+    {%endif%}
+    <div align="right">
+        {%if flag%}
+            <a href="{% url task %}"> 登记我的信息</a>
+        {%endif%}
+    </div>
+</p>
+    <hr/>
+<body>
+    <p align="center"><b>校友会信息一览表</b></p>
+    <table border="1" cellpadding="10" align="center">
+        {% if permiss %}
+        <tr>
+            <th colspan="5">姓名</th>
+            <th colspan="5">班级</th>
+            <th colspan="5">联系方式</th>
+            <th colspan="5">报道时间</th>
+            <th colspan="5">离校时间</th>
+            <th colspan="5">是否需要安排住宿</th>
+            <th colspan="5">入住时间</th>
+        </tr>
+        {% for con in content %}
+        <tr>
+            <td colspan="5">{{ con.0 }}</td>
+            <td colspan="5">{{ con.1 }}</td>
+            <td colspan="5">{{ con.2 }}</td>
+            <td colspan="5">{{ con.3 }}</td>
+            <td colspan="5">{{ con.4 }}</td>
+            <td colspan="5">{{ con.5 }}</td>
+            <td colspan="5">{{ con.6 }}</td>
+        </tr>
+        {% endfor %}
+        {% else %}
+        <tr>
+            <th colspan="5">姓名</th>
+            <th colspan="5">班级</th>
+        </tr>
+        {% for con in content %}
+        <tr>
+            <td colspan="5">{{ con.0 }}</td>
+            <td colspan="5">{{ con.1 }}</td>
+        </tr>
+        {% endfor %}
+        {% endif %}
+    </table>
+	{% if pagination.has_other_pages %}
+	<div class="pagination pagination-small" style="float: left;margin: 0;">
+		<ul>
+			{% if pagination.has_previous %}
+			<span>
+                <a href="?p=1">|&lt;</a>
+			</span>
+			<span>
+                <a href="?p={{pagination.previous_page_number}}">&lt;&lt;</a>
+			</span>
+			{% endif %}
+			<span class="active">
+				<a href="javascript:;">{{pagination.number}}</a>
+			</span>
+			{% if pagination.has_next %}
+			<span>
+                <a href="?p={{pagination.next_page_number}}">&gt;&gt;</a>
+			</span>
+			<span>
+                <a href="?p={{pagination.paginator.num_pages}}">&gt;|</a>
+			</span>
+			{% endif %}
+		</ul>
+	</div>
+	<form method="get" class="form-inline">
+		<span>&nbsp;&nbsp;(共{{pagination.paginator.num_pages}}页）前往:</span>
+		<div class="input-append">
+			<input style="width:40px;" type="text" name="p" placeholder="页"/>
+			<button type="submit" class="btn">Go</button>
+		</div>
+	</form>
+	{% endif %}
+    </p>
+
+</body>
+</html>

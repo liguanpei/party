@@ -1,0 +1,105 @@
+{% load static %}
+<html>
+<head>
+    <p  align="right">欢迎您：{{ user }} <a href="{%url "logout"%}">注销</a> </p>
+    <title>Search</title>
+	<script type="text/javascript" src="{% static "js/jquery-1.9.0.js" %}" > </script>
+</head>
+<body>
+
+<script type="text/javascript">
+ $(function(){
+	$(".saveButton").click(function(){
+	    var pid =  $(this).attr("pid");
+        var question = $(".question[pid='"+pid+"']:checked").val();
+        var message = $(".mess[pid='"+pid+"']").val();
+	    var filename =  $(this).attr("file_name");
+        if(question == null)
+            question = 'e'
+		var tmp = "/save_one/"
+		$.get(tmp,{
+		'pid':pid,
+		'question':question,
+		'message':message,
+		'filename': filename
+		},function(data){
+		 if(data=='success'){
+		  alert("提交成功");
+		}else{
+		 alert("服务器忙，请稍后再试");
+		}
+		});
+});
+});
+
+</script>
+    <form name="input" method="post">
+        {% csrf_token %}
+        {% for con in content %}
+        <p>
+        {{ con.6 }}、
+        <table border="1" cellpadding="10">
+            <tr>
+                <th>标记状态</th>
+                <td colspan="5">{{ con.7 }}</td>
+            </tr>
+            <tr>
+                <th>查询问题</th>
+                <td>{{ con.0 }}</td>
+                <td>备注: <textarea type="textarea" pid="{{ con.6 }}" name="beizhu_{{ con.6 }}"  class="mess" rows="1" cols="50"></textarea></td>
+                <td colspan="3" align="center"><input class = "saveButton" pid="{{ con.6 }}" type ="button" file_name="{{all_name}}" value ="保存"></td>
+            </tr>
+            <tr>
+                <th>匹配问题</th>
+                <td width=500>{{ con.4 }}</td>
+                <td width=500>{{ con.1 }} ||  扩展: {{ con.2 }}</td>
+                <td><input pid="{{ con.6 }}" class="question"  type="radio" name="q_{{ con.6 }}" value="y">左</td><td><input pid ="{{ con.6 }}" type="radio" class="question" name="q_{{ con.6 }}" value="n">右</td><td><input pid ="{{ con.6 }}" type="radio" class="question" name="q_{{ con.6 }}" value="a">全</td>
+            </tr>
+            <tr>
+                <th>匹配答案</th>
+                <td width=500>{{ con.5 }}</td>
+                <td width=500>{{ con.3 }}</td>
+            </tr>
+        </table>
+        </p>
+        {% endfor %}
+
+        <input type ="submit" name="question" value ="保存">
+    </form>
+	{% if pagination.has_other_pages %}
+	<div class="pagination pagination-small" style="float: left;margin: 0;">
+		<ul>
+			{% if pagination.has_previous %}
+			<span>
+                <a href="{{file_name}}?p=1">|&lt;</a>
+			</span>
+			<span>
+                <a href="{{file_name}}?p={{pagination.previous_page_number}}">&lt;&lt;</a>
+			</span>
+			{% endif %}
+			<span class="active">
+				<a href="javascript:;">{{pagination.number}}</a>
+			</span>
+			{% if pagination.has_next %}
+			<span>
+                <a href="{{file_name}}?p={{pagination.next_page_number}}">&gt;&gt;</a>
+			</span>
+			<span>
+                <a href="{{file_name}}?p={{pagination.paginator.num_pages}}">&gt;|</a>
+			</span>
+			{% endif %}
+		</ul>
+	</div>
+	<form method="get" class="form-inline">
+		<span>&nbsp;&nbsp;(共{{pagination.paginator.num_pages}}页）前往:</span>
+		<div class="input-append">
+			<input style="width:40px;" type="text" name="p" placeholder="页"/>
+			<button type="submit" class="btn">Go</button>
+		</div>
+	</form>
+	{% endif %}
+    
+
+
+</body>
+</html>

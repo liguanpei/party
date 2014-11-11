@@ -1,0 +1,16 @@
+包含主要文件：clear_redis.py views.py settings.py urls.py conf.py libs.py  save_to_redis.py y
+
+文件：clear_redis.py
+功能：清空redis的所有内容
+
+文件：conf.py
+功能：redis的主机与端口
+
+文件：libs.py
+功能：读取文件，并整理出成一定格式
+
+文件：save_to_redis.py
+功能：将源文件内容存到redis，key名为'all_data',值为一个字典，字典的键为id，内容为各问题
+
+文件：views.py
+功能：通过收集前端选择保存结果
